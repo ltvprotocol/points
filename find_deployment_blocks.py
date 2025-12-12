@@ -3,23 +3,7 @@ import json
 import sys
 import os
 from datetime import datetime, timezone
-
-
-def load_rpc_url():
-    """Load RPC URL from rpc.json"""
-    try:
-        with open('rpc.json', 'r') as f:
-            rpc_data = json.load(f)
-            return rpc_data.get('mainnet')
-    except FileNotFoundError:
-        print("Error: rpc.json file not found")
-        sys.exit(1)
-    except json.JSONDecodeError as e:
-        print(f"Error: Invalid JSON in rpc.json: {e}")
-        sys.exit(1)
-    except Exception as e:
-        print(f"Error reading rpc.json: {e}")
-        sys.exit(1)
+from dotenv import load_dotenv
 
 
 def load_contract_addresses():
@@ -126,7 +110,11 @@ def main():
     
     # Load configuration
     print("\n1. Loading configuration...")
-    rpc_url = load_rpc_url()
+    load_dotenv()
+    rpc_url = os.getenv("RPC_URL")
+    if not rpc_url:
+        print("Error: RPC_URL not found in .env file")
+        sys.exit(1)
     print(f"   RPC URL: {rpc_url}")
     
     addresses = load_contract_addresses()

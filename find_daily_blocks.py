@@ -4,6 +4,7 @@ import argparse
 from datetime import datetime, timezone
 from web3 import Web3
 import os
+from dotenv import load_dotenv
 
 
 def get_min_deployment_block():
@@ -76,12 +77,11 @@ def find_first_block_strictly_after_day(w3, start_block, latest_block, target_da
 
 
 def main():
-    with open("rpc.json", "r") as f:
-        rpc_config = json.load(f)
-    rpc_url = rpc_config.get("mainnet")
+    load_dotenv()
+    rpc_url = os.getenv("RPC_URL")
 
     if not rpc_url:
-        raise ValueError("rpc_url not found in rpc.json")
+        raise ValueError("RPC_URL not found in .env file")
 
     w3 = Web3(Web3.HTTPProvider(rpc_url))
 
@@ -89,7 +89,7 @@ def main():
         w3.is_connected() if hasattr(w3, "is_connected") else w3.isConnected()
     )
     if not is_connected:
-        raise RuntimeError("Cannot connect to RPC, check rpc.json")
+        raise RuntimeError("Cannot connect to RPC, check .env file")
 
     latest_block = w3.eth.block_number
     start_block = get_min_deployment_block()
@@ -177,21 +177,6 @@ def main():
         current_day = next_day
         current_search_start = first_after
 
-    result = {
-        "start_block": start_block,
-        "latest_block_checked": latest_block,
-        "start_day": str(start_day),
-        "latest_day": str(latest_day),
-        "total_days": len(all_boundaries),
-        "daily_boundaries": all_boundaries,
-    }
-
-    # with open(args.output, "w") as f:
-    #    json.dump(result, f, indent=2)
-
-    #print(f"\nSaved day border info for {len(all_boundaries)} days to {args.output}")
-    #print(f"Total days processed: {len(all_boundaries)}")
-
 
     if not os.path.exists('data'):
         os.makedirs('data')
@@ -199,9 +184,6 @@ def main():
     if not os.path.exists('data/days_blocks'):
         os.makedirs('data/days_blocks')
     
-    # Save every day in separate json files
-    # Format: {index}_{date}.json
-    # Only if "is_final_day": false
     saved_count = 0
     for index, boundary in enumerate(all_boundaries):
         if not boundary.get("is_final_day", False):

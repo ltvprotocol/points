@@ -6,8 +6,8 @@ import re
 from collections import defaultdict
 
 # Constants
-POINTS_PER_PILOT_VAULT_TOKEN = 1000
-POINTS_PER_PILOT_VAULT_TOKEN_FOR_NFT = (142 * 1000) // 100  # 1.42
+POINTS_PER_PILOT_VAULT_TOKEN = 1500
+POINTS_PER_PILOT_VAULT_TOKEN_FOR_NFT = (142 * 1500) // 100  # 1.42
 
 # DECIMALS FOR POINTS = 24
 
@@ -173,6 +173,15 @@ def calculate_points_for_day(day_index):
     """Calculate points for a single day period"""
     print(f"\nProcessing day {day_index}...")
     
+    # Load excluded addresses
+    excluded_addresses = set()
+    if os.path.exists("exclude.json"):
+        with open("exclude.json", 'r') as f:
+            excluded_list = json.load(f)
+            # Convert to lowercase for comparison
+            excluded_addresses = {addr.lower() for addr in excluded_list}
+            print(f"  Loaded {len(excluded_addresses)} excluded addresses")
+    
     # Load day state
     state_file = f"data/states/{day_index}.json"
     if not os.path.exists(state_file):
@@ -223,6 +232,10 @@ def calculate_points_for_day(day_index):
         
         # Calculate points for each user
         for addr, pilot_vault_balance in state["pilot_vault"].items():
+            # Skip excluded addresses
+            if addr.lower() in excluded_addresses:
+                continue
+            
             if pilot_vault_balance <= 0:
                 continue
             

@@ -153,11 +153,22 @@ def reconstruct_state_block_by_block(start_state, events, start_block, end_block
             "nft": {addr: sorted(list(token_ids)) for addr, token_ids in current_nft_state.items()},
             "pilot_vault": dict(current_pilot_vault_state)
         }
+
+    # Initialize state from start_state
+    nft_last_state = defaultdict(set)
+    pilot_vault_last_state = defaultdict(int)
     
+    # Load start state
+    for addr, token_ids in start_state.get("nft", {}).items():
+        nft_last_state[addr.lower()] = set(token_ids)
+    
+    for addr, balance in start_state.get("pilot_vault", {}).items():
+        pilot_vault_last_state[addr.lower()] = balance
+
     # Fill in blocks without events (use state from previous block)
     last_state = {
-        "nft": {addr: sorted(list(token_ids)) for addr, token_ids in nft_state.items()},
-        "pilot_vault": dict(pilot_vault_state)
+        "nft": nft_last_state,
+        "pilot_vault": pilot_vault_last_state
     }
     
     for block_num in range(start_block, end_block + 1):
@@ -223,7 +234,9 @@ def calculate_points_for_day(day_index):
     # Calculate points for each block
     print(f"  Calculating points...")
     user_points = defaultdict(int)  # {address: total_points}
-    
+
+    start_block_number = 0
+
     for block_num in range(start_block, end_block + 1):
         state = block_states.get(block_num, {
             "nft": {},
@@ -232,6 +245,7 @@ def calculate_points_for_day(day_index):
         
         # Calculate points for each user
         for addr, pilot_vault_balance in state["pilot_vault"].items():
+
             # Skip excluded addresses
             if addr.lower() in excluded_addresses:
                 continue
@@ -249,6 +263,13 @@ def calculate_points_for_day(day_index):
                 base_points = pilot_vault_balance * POINTS_PER_PILOT_VAULT_TOKEN
             
             user_points[addr] += base_points
+
+            if addr == "0x8252a1a673796110ca091344fdae1729e7aea94b":
+                if start_block_number == 0:
+                    start_block_number = block_num
+                    # save to specific file
+                    with open(f"data/points/start_block_number_{day_index}.txt", 'w') as f:
+                        f.write(str(start_block_number))
     
     # Convert to regular dict and sort
     points_dict = dict(user_points)

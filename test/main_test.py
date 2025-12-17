@@ -19,16 +19,21 @@ def run_all_tests():
     print("Running All Tests")
     print("=" * 60)
     
-    # Get the directory containing this file
     test_dir = os.path.dirname(os.path.abspath(__file__))
     
-    # Change to the project root directory
+    # Get project root directory
     project_root = os.path.dirname(test_dir)
+    
+    # Add project root to sys.path so imports work from any directory
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
+    
+    # Change to the project root directory
     os.chdir(project_root)
     
     # Run pytest on the test directory
     exit_code = pytest.main([
-        test_dir,
+        "./",
         "-v",
         "--tb=short",
         "-s"  # Show print statements

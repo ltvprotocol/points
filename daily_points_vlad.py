@@ -84,10 +84,10 @@ def combine_events(block_number_to_transfer_events, block_number_to_nft_events):
         block_number_to_events[block_number].extend(nft_events)
 
     for block_number, events in block_number_to_events.items():
-        block_number_to_events[block_number] = events.sort(
-            key=lambda x: (x["blockNumber"], x["transactionIndex"], x["logIndex"])
+        block_number_to_events[block_number] = sorted(
+            events,
+            key=lambda x: (x["blockNumber"], x["transactionIndex"], x["logIndex"]),
         )
-
     return block_number_to_events
 
 

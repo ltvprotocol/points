@@ -3,8 +3,7 @@ import json
 import sys
 import os
 from datetime import datetime, timezone
-from dotenv import load_dotenv
-
+from utils.get_rpc import get_rpc
 
 def load_contract_addresses():
     """Load contract addresses from config.json"""
@@ -110,11 +109,7 @@ def main():
     
     # Load configuration
     print("\n1. Loading configuration...")
-    load_dotenv()
-    rpc_url = os.getenv("RPC_URL")
-    if not rpc_url:
-        print("Error: RPC_URL not found in .env file")
-        sys.exit(1)
+    rpc_url = get_rpc()
     print(f"   RPC URL: {rpc_url}")
     
     addresses = load_contract_addresses()

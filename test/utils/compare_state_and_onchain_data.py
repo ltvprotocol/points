@@ -2,8 +2,7 @@ import json
 import os
 from web3 import Web3
 import pytest
-from dotenv import load_dotenv
-
+from utils.get_rpc import get_rpc
 
 def load_contract_addresses():
     """Load contract addresses from config.json"""
@@ -23,13 +22,9 @@ def compare_state_and_onchain_data(
     get_onchain_data: callable,
     validate_data: callable,
 ):
-    load_dotenv()
-    rpc_url = os.getenv("RPC_URL")
-    if not rpc_url:
-        raise ValueError("RPC_URL not found in .env file")
     addresses = load_contract_addresses()
 
-    w3 = Web3(Web3.HTTPProvider(rpc_url))
+    w3 = Web3(Web3.HTTPProvider(get_rpc()))
     if not w3.is_connected():
         pytest.skip("Cannot connect to RPC, check .env file")
 

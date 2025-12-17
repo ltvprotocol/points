@@ -7,7 +7,7 @@ from web3 import Web3
 from datetime import datetime
 import time
 import sys
-from dotenv import load_dotenv
+from utils.get_rpc import get_rpc
 
 # ABI for Transfer event
 TRANSFER_EVENT_ABI = [
@@ -184,16 +184,9 @@ def fetch_and_save_events(w3, contract, contract_address, start_block, end_block
 
 
 def main():
-    # Load RPC URL
-    print("Loading RPC configuration...")
-    load_dotenv()
-    rpc_url = os.getenv("RPC_URL")
-    if not rpc_url:
-        raise ValueError("RPC_URL not found in .env file")
-    
     # Initialize Web3 connection
     print("Connecting to blockchain...")
-    w3 = Web3(Web3.HTTPProvider(rpc_url))
+    w3 = Web3(Web3.HTTPProvider(get_rpc()))
     is_connected = (
         w3.is_connected() if hasattr(w3, "is_connected") else w3.isConnected()
     )

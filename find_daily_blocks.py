@@ -4,7 +4,7 @@ import argparse
 from datetime import datetime, timezone
 from web3 import Web3
 import os
-from dotenv import load_dotenv
+from utils.get_rpc import get_rpc
 
 
 def get_min_deployment_block():
@@ -77,13 +77,7 @@ def find_first_block_strictly_after_day(w3, start_block, latest_block, target_da
 
 
 def main():
-    load_dotenv()
-    rpc_url = os.getenv("RPC_URL")
-
-    if not rpc_url:
-        raise ValueError("RPC_URL not found in .env file")
-
-    w3 = Web3(Web3.HTTPProvider(rpc_url))
+    w3 = Web3(Web3.HTTPProvider(get_rpc()))
 
     is_connected = (
         w3.is_connected() if hasattr(w3, "is_connected") else w3.isConnected()

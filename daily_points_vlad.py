@@ -103,12 +103,6 @@ def get_user_balance_at_day(day_index, state_key):
     for address, balance in state["pilot_vault"][state_key].items():
         user_balances[address.lower()].balance = balance
 
-    print("=" * 100)
-    print("user balances")
-    for address, balance in user_balances.items():
-        print(f"{address}: {balance.balance} {balance.nft_ids}")
-    print("=" * 100)
-
     return user_balances
 
 

@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Prepare data and run pipeline scripts
+        run: |
+          python3 find_deployment_blocks.py
+          python3 find_daily_blocks.py
+          python3 nft_events.py
+          python3 pilot_vault_events.py
+          python3 daily_states_v2.py
+          python3 daily_points_v2.py
+          python3 aggregate_daily_points.py
+
+      - name: Run all tests
+        run: python3 test/main_test.py

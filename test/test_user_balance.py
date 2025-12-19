@@ -5,7 +5,7 @@ import glob
 from web3 import Web3
 from utils.compare_state_and_onchain_data import compare_state_and_onchain_data
 
-use_state_file = ["77.json"]
+use_state_file = ["84.json"]
 use_state_file_index = 0
 
 ERC20_ABI = [

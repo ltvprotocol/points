@@ -7,7 +7,7 @@ from utils.compare_state_and_onchain_data import compare_state_and_onchain_data
 from collections import defaultdict
 
 
-use_state_file = ["77.json"]
+use_state_file = ["84.json"]
 
 # ERC721 ABI for balanceOf and ownerOf functions
 ERC721_ABI = [

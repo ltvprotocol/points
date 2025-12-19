@@ -30,12 +30,12 @@ class TestPoints:
         points = load_points_sorted()
         states = load_states_sorted()
 
-        point = points[51]
-        state = states[51]
+        point = points[81]
+        state = states[81]
 
-        user = "0x91a98fd033434adf63223f88064c95a89e08061c"
-        points_per_one_wei = (point["end_block"] - point["start_block"] + 1) * 1000
-        expected_points = state["pilot_vault"]["end_state"][user] * points_per_one_wei
+        user = "0xd23d8aead200401091022e5c4304b32b56042808"
+        points_per_one_wei = (point["end_block"] - point["start_block"] + 1) * 1420
+        expected_points = state["pilot_vault"]["end_state"][user]["balance"] * points_per_one_wei
 
         assert (
             expected_points == point["points"][user]
@@ -45,21 +45,21 @@ class TestPoints:
         points = load_points_sorted()
         states = load_states_sorted()
 
-        point = points[51]
-        state = states[51]
+        point = points[79]
+        state = states[79]
 
-        user = "0x202065dfb813295d0b095a39e36e3b3296210505"
+        user = "0xAfD8FB69E850D2Da8ac47E4443b0140F4dE5Fb4f".lower()
 
-        event_block_number = 23799902
-        user_balance_before = state["pilot_vault"]["start_state"][user]
-        balance_increase = 611108746658861
+        event_block_number = 23993946
+        user_balance_before = state["pilot_vault"]["start_state"][user]["balance"]
+        balance_increase = 198777366745194886
 
         expected_points = (
-            user_balance_before * 1000 * (event_block_number - state["start_block"])
+            user_balance_before * 1420 * (event_block_number - state["start_block"])
         )
         expected_points += (
             (user_balance_before + balance_increase)
-            * 1000
+            * 1420
             * (point["end_block"] - event_block_number + 1)
         )
 
@@ -67,20 +67,21 @@ class TestPoints:
             expected_points == point["points"][user]
         ), f"Expected points for user {user} without nft but with balance change does not match calculated points: {expected_points} != {point['points'][user]}"
 
-    def test_nft_balance_changed(self):
-        points = load_points_sorted()
-        states = load_states_sorted()
+    # Impossible to test with current data, since everyone has nfts. Worked before, to be added later
+    # def test_nft_balance_changed(self):
+    #     points = load_points_sorted()
+    #     states = load_states_sorted()
 
-        point = points[77]
-        state = states[77]
+    #     point = points[77]
+    #     state = states[77]
 
-        user = "0xC3cB47f1d74abc82Cc9acd748c9C6714F9c77EFF".lower()
-        event_block_number = 23983629
-        start_block = state["start_block"]
-        end_block = state["end_block"]
-        balance = state["pilot_vault"]["start_state"][user]
-        expected_points = balance * 1000 * (event_block_number - start_block)
-        expected_points += balance * 1420 * (end_block - event_block_number + 1)
-        assert (
-            expected_points == point["points"][user]
-        ), f"Expected points for user {user} with nft balance change but without balance change does not match calculated points: {expected_points} != {point['points'][user]}"
+    #     user = "0xC3cB47f1d74abc82Cc9acd748c9C6714F9c77EFF".lower()
+    #     event_block_number = 23983629
+    #     start_block = state["start_block"]
+    #     end_block = state["end_block"]
+    #     balance = state["pilot_vault"]["start_state"][user]
+    #     expected_points = balance * 1000 * (event_block_number - start_block)
+    #     expected_points += balance * 1420 * (end_block - event_block_number + 1)
+    #     assert (
+    #         expected_points == point["points"][user]
+    #     ), f"Expected points for user {user} with nft balance change but without balance change does not match calculated points: {expected_points} != {point['points'][user]}"

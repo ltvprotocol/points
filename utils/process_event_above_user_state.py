@@ -18,6 +18,8 @@ def process_transfer_event(event, user_state) -> UserState:
     to_addr = event["args"]["to"].lower()
     if from_addr != ZERO_ADDRESS:
         user_state[from_addr].balance -= value
+        if user_state[from_addr].balance < 0:
+            raise ValueError(f"Balance of {from_addr} is negative: {user_state[from_addr].balance}")
         user_state[from_addr].last_negative_balance_update_block = event["blockNumber"]
     if to_addr != ZERO_ADDRESS:
         user_state[to_addr].balance += value
@@ -30,8 +32,12 @@ def process_nft_event(event, user_state) -> UserState:
     from_addr = event["args"]["from"].lower()
     to_addr = event["args"]["to"].lower()
     if from_addr != ZERO_ADDRESS:
+        if token_id not in user_state[from_addr].nft_ids:
+            raise ValueError(f"Token {token_id} not found in from address {from_addr}")
         user_state[from_addr].nft_ids.discard(token_id)
     if to_addr != ZERO_ADDRESS:
+        if token_id in user_state[to_addr].nft_ids:
+            raise ValueError(f"Token {token_id} already exists in to address {to_addr}")
         user_state[to_addr].nft_ids.add(token_id)
     return user_state
 

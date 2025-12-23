@@ -138,5 +138,6 @@ def process_points():
             indent=2,
         )
 
-lp_balances_snapshot = get_user_state("data/lp_balances_snapshot.json", "start_state")
-process_points()
+if __name__ == "__main__":
+    lp_balances_snapshot = get_user_state("data/lp_balances_snapshot.json", "start_state")
+    process_points()

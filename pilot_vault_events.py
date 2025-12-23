@@ -164,23 +164,7 @@ def fetch_and_save_events(w3, contract, contract_address, start_block, end_block
         
     except Exception as e:
         print(f"  Error reading events: {e}")
-        # Save error information to file
-        output_data = {
-            "error": True,
-            "error_message": str(e),
-            "metadata": {
-                "contractAddress": contract_address,
-                "eventName": "Transfer",
-                "startBlock": start_block,
-                "endBlock": end_block,
-                "totalEvents": 0,
-                "exportedAt": datetime.now().isoformat()
-            },
-            "events": []
-        }
-        with open(output_file, 'w') as f:
-            json.dump(output_data, f, indent=2)
-        print(f"  Error information saved to {output_file}")
+        sys.exit(1)
 
 
 def main():

@@ -74,7 +74,7 @@ def read_events_chunked(contract, start_block, end_block, chunk_size=10000):
     all_logs = []
     current_block = start_block
     
-    while current_block <= end_block:
+    while current_block < end_block:
         chunk_end = min(current_block + chunk_size - 1, end_block)
         
         try:

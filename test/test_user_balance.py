@@ -35,7 +35,7 @@ def get_onchain_balances(w3, state_data, users_data, addresses, block_key):
     block = state_data[block_key] if block_key == "end_block" else state_data[block_key] - 1
     for user, _ in users_data.items():
         contract = w3.eth.contract(
-            address=Web3.to_checksum_address(["pilot_vault"]), abi=ERC20_ABI
+            address=Web3.to_checksum_address(addresses["pilot_vault"]), abi=ERC20_ABI
         )
         balance = contract.functions.balanceOf(Web3.to_checksum_address(user)).call(
             block_identifier=block

@@ -21,6 +21,7 @@ POINTS_PER_PILOT_VAULT_TOKEN = 1000
 POINTS_PER_PILOT_VAULT_TOKEN_FOR_NFT = (142 * 1000) // 100  # 1.42
 
 lp_balances_snapshot = {}
+lp_balances_snapshot_start_block = 0
 
 type Points = int
     
@@ -110,7 +111,8 @@ def get_points(day_index) -> Dict[str, Points]:
         events = block_number_to_events[block_number]
         for event in events:
             user_state = process_event_above_user_state(event, user_state)
-        points = give_points_for_user_state(user_state, points)
+        if block_number > lp_balances_snapshot_start_block:
+            points = give_points_for_user_state(user_state, points)
 
     validate_end_state(day_index, user_state)
     return points
@@ -139,5 +141,7 @@ def process_points():
         )
 
 if __name__ == "__main__":
-    lp_balances_snapshot = get_user_state("data/lp_balances_snapshot.json", "start_state")
+    lp_balances_snapshot_data_dir = "data/lp_balances_snapshot.json"
+    lp_balances_snapshot = get_user_state(lp_balances_snapshot_data_dir, "start_state")
+    lp_balances_snapshot_start_block = json.load(open(lp_balances_snapshot_data_dir, 'r'))["start_block"]
     process_points()

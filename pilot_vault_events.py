@@ -8,6 +8,7 @@ from datetime import datetime
 import time
 import sys
 from utils.get_rpc import get_rpc
+from utils.aggregated_w3_request import create_contract_instances, w3_instances, make_aggregated_call
 
 # ABI for Transfer event
 TRANSFER_EVENT_ABI = [
@@ -66,11 +67,10 @@ def get_day_block_files():
     return file_data
 
 
-def read_events_chunked(contract, start_block, end_block, chunk_size=10000):
+def read_events_chunked(contracts, start_block, end_block, chunk_size=10000):
     """Read events in chunks to avoid RPC limits"""
     print(f"  Fetching events from block {start_block} to {end_block}...")
     
-    event = getattr(contract.events, "Transfer")
     all_logs = []
     current_block = start_block
     
@@ -79,7 +79,7 @@ def read_events_chunked(contract, start_block, end_block, chunk_size=10000):
         
         try:
             print(f"    Fetching logs from block {current_block} to {chunk_end}...")
-            logs = event().get_logs(from_block=current_block, to_block=chunk_end)
+            logs = make_aggregated_call(contracts, lambda contract: contract.events.Transfer().get_logs(from_block=current_block, to_block=chunk_end))
             all_logs.extend(logs)
             print(f"    Found {len(logs)} events in this chunk")
             
@@ -91,7 +91,7 @@ def read_events_chunked(contract, start_block, end_block, chunk_size=10000):
             # Try smaller chunk size if we get an error
             if chunk_size > 1000:
                 print(f"    Retrying with smaller chunk size: {chunk_size // 2}")
-                return read_events_chunked(contract, start_block, end_block, chunk_size // 2)
+                return read_events_chunked(contracts, start_block, end_block, chunk_size // 2)
             else:
                 print("Could not fetch events from block {current_block} to {chunk_end}")
                 sys.exit(1)
@@ -101,7 +101,7 @@ def read_events_chunked(contract, start_block, end_block, chunk_size=10000):
     return all_logs
 
 
-def fetch_and_save_events(w3, contract, contract_address, start_block, end_block, output_file):
+def fetch_and_save_events(contracts, contract_address, start_block, end_block, output_file):
     """Fetch transfer events and save to JSON file"""
     # Validate block range
     if start_block > end_block:
@@ -125,7 +125,7 @@ def fetch_and_save_events(w3, contract, contract_address, start_block, end_block
         return
     
     try:
-        logs = read_events_chunked(contract, start_block, end_block)
+        logs = read_events_chunked(contracts, start_block, end_block)
         if logs is None:
             logs = []
         
@@ -168,15 +168,6 @@ def fetch_and_save_events(w3, contract, contract_address, start_block, end_block
 
 
 def main():
-    # Initialize Web3 connection
-    print("Connecting to blockchain...")
-    w3 = Web3(Web3.HTTPProvider(get_rpc()))
-    is_connected = (
-        w3.is_connected() if hasattr(w3, "is_connected") else w3.isConnected()
-    )
-    if not is_connected:
-        raise RuntimeError("Cannot connect to RPC")
-    
     # Get pilot_vault deployment block and address
     print("Reading deployment blocks...")
     deployment_block, pilot_vault_address = get_pilot_vault_deployment_block()
@@ -195,7 +186,7 @@ def main():
     # Setup contract
     print("Setting up contract...")
     contract_address = Web3.to_checksum_address(pilot_vault_address)
-    contract = w3.eth.contract(address=contract_address, abi=TRANSFER_EVENT_ABI)
+    contracts = create_contract_instances(w3_instances, contract_address, TRANSFER_EVENT_ABI)
     
     # Create output directory
     output_dir = "data/events/pilot_vault"
@@ -239,7 +230,7 @@ def main():
             continue
         
         print(f"\nProcessing range {range_index}: blocks {start_block} to {end_block}")
-        fetch_and_save_events(w3, contract, contract_address, start_block, end_block, output_file)
+        fetch_and_save_events(contracts, contract_address, start_block, end_block, output_file)
     
     print(f"\nCompleted! Processed {len(ranges)} ranges.")
 

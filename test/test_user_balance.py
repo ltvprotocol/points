@@ -5,6 +5,7 @@ import glob
 from web3 import Web3
 from utils.compare_state_and_onchain_data import compare_state_and_onchain_data
 
+
 use_state_file = ["../lp_balances_snapshot.json", "84.json"]
 use_state_file_index = 0
 

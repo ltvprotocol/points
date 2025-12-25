@@ -1,9 +1,10 @@
-from web3 import Web3
 import json
 import sys
 import os
 from datetime import datetime, timezone
 from utils.get_rpc import get_rpc
+from utils.aggregated_w3_request import w3_instances, make_aggregated_call
+from web3 import Web3
 
 def load_contract_addresses():
     """Load contract addresses from config.json"""
@@ -35,22 +36,21 @@ def load_contract_addresses():
         sys.exit(1)
 
 
-def has_contract_code(w3, address, block_number):
+def has_contract_code(address, block_number):
     """Check if contract has code at a specific block"""
     try:
-        code = w3.eth.get_code(address, block_number)
+        code = make_aggregated_call(w3_instances, lambda w3: w3.eth.get_code(address, block_number))
         return len(code) > 0
     except Exception as e:
         print(f"Warning: Error checking code at block {block_number}: {e}")
         return False
 
 
-def find_deployment_block(w3, address, start_block=0, end_block=None):
+def find_deployment_block(address, start_block=0, end_block=None):
     """
     Find the deployment block of a contract using binary search.
     
     Args:
-        w3: Web3 instance
         address: Contract address
         start_block: Starting block for search (default: 0)
         end_block: Ending block for search (default: latest block)
@@ -59,12 +59,12 @@ def find_deployment_block(w3, address, start_block=0, end_block=None):
         Block number where contract was deployed, or None if not found
     """
     if end_block is None:
-        end_block = w3.eth.block_number
+        end_block = make_aggregated_call(w3_instances, lambda w3: w3.eth.block_number)
     
     print(f"  Searching for deployment block between {start_block} and {end_block}...")
     
     # First, check if contract exists at the end block
-    if not has_contract_code(w3, address, end_block):
+    if not has_contract_code(address, end_block):
         print(f"  Error: Contract has no code at block {end_block}. Contract may not be deployed yet.")
         return None
     
@@ -76,7 +76,7 @@ def find_deployment_block(w3, address, start_block=0, end_block=None):
     while left <= right:
         mid = (left + right) // 2
         
-        if has_contract_code(w3, address, mid):
+        if has_contract_code(address, mid):
             # Contract exists at this block, search earlier
             result = mid
             right = mid - 1
@@ -87,10 +87,10 @@ def find_deployment_block(w3, address, start_block=0, end_block=None):
     return result
 
 
-def get_block_info(w3, block_number):
+def get_block_info(block_number):
     """Get block information including timestamp"""
     try:
-        block = w3.eth.get_block(block_number)
+        block = make_aggregated_call(w3_instances, lambda w3: w3.eth.get_block(block_number))
         return {
             'block_number': block_number,
             'timestamp': block.timestamp,
@@ -118,18 +118,8 @@ def main():
     
     # Initialize Web3 connection
     print("\n2. Connecting to blockchain...")
-    try:
-        w3 = Web3(Web3.HTTPProvider(rpc_url))
-        if not w3.is_connected():
-            print(f"Error: Could not connect to RPC provider at {rpc_url}")
-            sys.exit(1)
-        print("   Connected successfully")
-    except Exception as e:
-        print(f"Error connecting to RPC provider: {e}")
-        sys.exit(1)
-    
     # Get latest block
-    latest_block = w3.eth.block_number
+    latest_block = make_aggregated_call(w3_instances, lambda w3: w3.eth.block_number)
     print(f"   Latest block: {latest_block}")
     
     # Find deployment blocks
@@ -139,9 +129,9 @@ def main():
     
     # Find NFT contract deployment block
     print(f"\n   NFT Contract ({addresses['nft']}):")
-    nft_deployment_block = find_deployment_block(w3, addresses['nft'], end_block=latest_block)
+    nft_deployment_block = find_deployment_block(addresses['nft'], end_block=latest_block)
     if nft_deployment_block:
-        nft_block_info = get_block_info(w3, nft_deployment_block)
+        nft_block_info = get_block_info(nft_deployment_block)
         results['nft'] = {
             'address': addresses['nft'],
             'deployment_block': nft_deployment_block,
@@ -159,9 +149,9 @@ def main():
     
     # Find Pilot Vault contract deployment block
     print(f"\n   Pilot Vault Contract ({addresses['pilot_vault']}):")
-    vault_deployment_block = find_deployment_block(w3, addresses['pilot_vault'], end_block=latest_block)
+    vault_deployment_block = find_deployment_block(addresses['pilot_vault'], end_block=latest_block)
     if vault_deployment_block:
-        vault_block_info = get_block_info(w3, vault_deployment_block)
+        vault_block_info = get_block_info(vault_deployment_block)
         results['pilot_vault'] = {
             'address': addresses['pilot_vault'],
             'deployment_block': vault_deployment_block,

@@ -8,6 +8,7 @@ python3 pilot_vault_events.py
 python3 daily_states_v2.py
 python3 daily_points_v2.py
 python3 aggregate_daily_points.py
+python3 test/main_test.py
 ```
 
 ## find_deployment_blocks.py

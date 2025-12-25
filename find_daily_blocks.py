@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 import json
-import argparse
 from datetime import datetime, timezone
-from web3 import Web3
 import os
-from utils.get_rpc import get_rpc
+from utils.aggregated_w3_request import w3_instances, make_aggregated_call
 
 
 def get_min_deployment_block():
@@ -29,11 +27,11 @@ def get_min_deployment_block():
     return min_block
 
 
-def get_block(w3, num, cache):
+def get_block(num, cache):
     """Fetch block with simple cache."""
     if num in cache:
         return cache[num]
-    blk = w3.eth.get_block(num)
+    blk = make_aggregated_call(w3_instances, lambda w3: w3.eth.get_block(num))
     cache[num] = blk
     return blk
 
@@ -43,7 +41,7 @@ def get_block_date(block):
     return datetime.fromtimestamp(block["timestamp"], tz=timezone.utc).date()
 
 
-def find_first_block_strictly_after_day(w3, start_block, latest_block, target_day):
+def find_first_block_strictly_after_day(start_block, latest_block, target_day):
     """
     Binary search for the smallest block number in [start_block, latest_block]
     whose UTC date is strictly greater than target_day.
@@ -55,7 +53,7 @@ def find_first_block_strictly_after_day(w3, start_block, latest_block, target_da
 
     while lo < hi:
         mid = (lo + hi) // 2
-        blk = get_block(w3, mid, cache)
+        blk = get_block(mid, cache)
         blk_day = get_block_date(blk)
 
         if blk_day <= target_day:
@@ -70,33 +68,25 @@ def find_first_block_strictly_after_day(w3, start_block, latest_block, target_da
         return None
 
     # sanity check
-    blk = get_block(w3, lo, cache)
+    blk = get_block(lo, cache)
     if get_block_date(blk) > target_day:
         return lo
     return None
 
 
 def main():
-    w3 = Web3(Web3.HTTPProvider(get_rpc()))
-
-    is_connected = (
-        w3.is_connected() if hasattr(w3, "is_connected") else w3.isConnected()
-    )
-    if not is_connected:
-        raise RuntimeError("Cannot connect to RPC")
-
-    latest_block = w3.eth.block_number
+    latest_block = make_aggregated_call(w3_instances, lambda w3: w3.eth.block_number)
     start_block = get_min_deployment_block()
 
     if start_block > latest_block:
         raise ValueError(f"start-block {start_block} is greater than latest block {latest_block}")
 
     # Get starting block and its day
-    start_blk = w3.eth.get_block(start_block)
+    start_blk = make_aggregated_call(w3_instances, lambda w3: w3.eth.get_block(start_block))
     start_day = get_block_date(start_blk)
     
     # Get latest block and its day
-    latest_blk = w3.eth.get_block(latest_block)
+    latest_blk = make_aggregated_call(w3_instances, lambda w3: w3.eth.get_block(latest_block))
     latest_day = get_block_date(latest_blk)
 
     print(f"Starting from block {start_block}, day = {start_day}")
@@ -113,14 +103,14 @@ def main():
         
         # Binary search for first block *after* this day
         first_after = find_first_block_strictly_after_day(
-            w3, current_search_start, latest_block, current_day
+            current_search_start, latest_block, current_day
         )
 
         if first_after is None:
             # No next day found yet (we're at the latest day)
             # Use latest_block as the last block of current day
             last_block_same_day = latest_block
-            last_blk = get_block(w3, last_block_same_day, cache)
+            last_blk = get_block(last_block_same_day, cache)
             
             all_boundaries.append({
                 "day": str(current_day),
@@ -139,8 +129,8 @@ def main():
             break
 
         last_block_same_day = first_after - 1
-        last_blk = get_block(w3, last_block_same_day, cache)
-        first_next_blk = get_block(w3, first_after, cache)
+        last_blk = get_block(last_block_same_day, cache)
+        first_next_blk = get_block(first_after, cache)
         next_day = get_block_date(first_next_blk)
 
         all_boundaries.append({

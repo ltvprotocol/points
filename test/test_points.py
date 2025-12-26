@@ -1,14 +1,14 @@
-from test_states import load_states_sorted
+from test.test_states import load_states_sorted
 from pathlib import Path
 import json
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from collections import defaultdict
 import sys
 
 # Add parent directory to path to import daily_points_v2
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from daily_points_v2 import give_points_for_user_state, POINTS_PER_PILOT_VAULT_TOKEN, POINTS_PER_PILOT_VAULT_TOKEN_FOR_NFT
-from utils.process_event_above_user_state import UserState
+from src.daily_points_v2 import give_points_for_user_state, POINTS_PER_PILOT_VAULT_TOKEN, POINTS_PER_PILOT_VAULT_TOKEN_FOR_NFT
+from src.utils.process_event_above_user_state import UserState
 
 DATA_DIR = Path("data")
 

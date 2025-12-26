@@ -1,9 +1,5 @@
-#!/usr/bin/env python3
-import json
-import random
-import glob
 from web3 import Web3
-from utils.compare_state_and_onchain_data import compare_state_and_onchain_data
+from test.utils.compare_state_and_onchain_data import compare_state_and_onchain_data
 from collections import defaultdict
 
 

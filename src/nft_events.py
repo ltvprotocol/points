@@ -7,7 +7,7 @@ from web3 import Web3
 from datetime import datetime
 import time
 import sys
-from utils.aggregated_w3_request import (
+from src.utils.aggregated_w3_request import (
     create_contract_instances,
     w3_instances,
     make_aggregated_call,

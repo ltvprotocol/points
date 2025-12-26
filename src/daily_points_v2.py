@@ -2,14 +2,14 @@ import json
 from collections import defaultdict
 import os
 from typing import Dict, List
-from utils.event_type import EventType
-from utils.read_combined_sorted_events import read_combined_sorted_events
-from utils.process_event_above_user_state import (
+from src.utils.event_type import EventType
+from src.utils.read_combined_sorted_events import read_combined_sorted_events
+from src.utils.process_event_above_user_state import (
     process_event_above_user_state,
     UserState,
 )
-from utils.get_days_amount import get_days_amount
-from utils.get_additional_data import (
+from src.utils.get_days_amount import get_days_amount
+from src.utils.get_additional_data import (
     get_start_block_for_day,
     get_end_block_for_day,
     get_day_date,

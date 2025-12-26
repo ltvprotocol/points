@@ -3,14 +3,14 @@ from utils.process_event_above_user_state import (
     UserState,
     process_event_above_user_state,
 )
-from utils.read_combined_sorted_events import read_combined_sorted_events
+from src.utils.read_combined_sorted_events import read_combined_sorted_events
 import json
 import glob
 from collections import defaultdict
 import os
 import copy
-from utils.get_days_amount import get_days_amount
-from utils.get_additional_data import (
+from src.utils.get_days_amount import get_days_amount
+from src.utils.get_additional_data import (
     get_start_block_for_day,
     get_end_block_for_day,
     get_day_date,

@@ -4,14 +4,14 @@ from pathlib import Path
 
 # Add parent directory to path to import modules
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from utils.process_event_above_user_state import (
+from src.utils.process_event_above_user_state import (
     process_event_above_user_state,
     process_transfer_event,
     process_nft_event,
     UserState,
     ZERO_ADDRESS,
 )
-from utils.event_type import EventType
+from src.utils.event_type import EventType
 
 
 class TestProcessTransferEvent:

@@ -1,4 +1,4 @@
-from test_points import load_points_sorted, DATA_DIR
+from test.test_points import load_points_sorted, DATA_DIR
 from pathlib import Path
 import json
 

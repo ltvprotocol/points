@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from web3 import Web3
-from utils.get_rpc import get_rpc
+from src.utils.get_rpc import get_rpc
 
 DATA_DIR = Path(__file__).parent.parent / "data"
 STATES_DIR = DATA_DIR / "states"

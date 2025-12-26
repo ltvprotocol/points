@@ -2,8 +2,7 @@ import json
 import sys
 import os
 from datetime import datetime, timezone
-from utils.get_rpc import get_rpc
-from utils.aggregated_w3_request import w3_instances, make_aggregated_call
+from .utils.aggregated_w3_request import w3_instances, make_aggregated_call
 from web3 import Web3
 
 def load_contract_addresses():
@@ -106,11 +105,6 @@ def main():
     print("=" * 60)
     print("Finding Contract Deployment Blocks")
     print("=" * 60)
-    
-    # Load configuration
-    print("\n1. Loading configuration...")
-    rpc_url = get_rpc()
-    print(f"   RPC URL: {rpc_url}")
     
     addresses = load_contract_addresses()
     print(f"   NFT Contract: {addresses['nft']}")

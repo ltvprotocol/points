@@ -57,6 +57,19 @@ class RequestResult:
         error_hash = hash(self.error)
         return hash((result_hash, error_hash))
 
+    def __repr__(self):
+        # Pretty-print the result and error, with introspection for deeply nested dicts/lists
+        from pprint import pformat
+        result_str = pformat(self.result, width=80)
+        if self.error is not None:
+            return f"<RequestResult result={result_str}, error={repr(self.error)}>"
+        else:
+            return f"<RequestResult result={result_str}, error=None>"
+
+    def __str__(self):
+        # Use __repr__ for str, for pretty printing in print()
+        return self.__repr__()
+
 def create_contract_instances(w3_instances, address, abi):
     contract_instances = []
     address = Web3.to_checksum_address(address)

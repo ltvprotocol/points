@@ -2,14 +2,14 @@ import json
 from collections import defaultdict
 import os
 from typing import Dict, List
-from utils.event_type import EventType
-from utils.read_combined_sorted_events import read_combined_sorted_events
-from utils.process_event_above_user_state import (
+from .utils.event_type import EventType
+from .utils.read_combined_sorted_events import read_combined_sorted_events
+from .utils.process_event_above_user_state import (
     process_event_above_user_state,
     UserState,
 )
-from utils.get_days_amount import get_days_amount
-from utils.get_additional_data import (
+from .utils.get_days_amount import get_days_amount
+from .utils.get_additional_data import (
     get_start_block_for_day,
     get_end_block_for_day,
     get_day_date,
@@ -24,7 +24,7 @@ lp_balances_snapshot = {}
 lp_balances_snapshot_start_block = 0
 
 type Points = int
-    
+
 
 def get_user_state(filename, state_key):
     with open(filename, "r") as f:
@@ -43,6 +43,7 @@ def get_user_state(filename, state_key):
         ]
     return user_state
 
+
 def get_user_state_at_day(day_index, state_key):
     state_file = f"data/states/{day_index}.json"
     return get_user_state(state_file, state_key)
@@ -50,9 +51,13 @@ def get_user_state_at_day(day_index, state_key):
 
 def give_points_for_user_state(user_state, points) -> Dict[str, Points]:
     for address, user_state in user_state.items():
-        balance_excluding_snapshot = max(0, user_state.balance - lp_balances_snapshot[address].balance)
+        balance_excluding_snapshot = max(
+            0, user_state.balance - lp_balances_snapshot[address].balance
+        )
         if len(user_state.nft_ids) == 0:
-            points[address.lower()] += balance_excluding_snapshot * POINTS_PER_PILOT_VAULT_TOKEN
+            points[address.lower()] += (
+                balance_excluding_snapshot * POINTS_PER_PILOT_VAULT_TOKEN
+            )
         else:
             points[address.lower()] += (
                 balance_excluding_snapshot * POINTS_PER_PILOT_VAULT_TOKEN_FOR_NFT
@@ -140,8 +145,16 @@ def process_points():
             indent=2,
         )
 
-if __name__ == "__main__":
+
+def initialize_global_variables_and_process_points():
+    global lp_balances_snapshot, lp_balances_snapshot_start_block
     lp_balances_snapshot_data_dir = "data/lp_balances_snapshot.json"
     lp_balances_snapshot = get_user_state(lp_balances_snapshot_data_dir, "start_state")
-    lp_balances_snapshot_start_block = json.load(open(lp_balances_snapshot_data_dir, 'r'))["start_block"]
+    lp_balances_snapshot_start_block = json.load(
+        open(lp_balances_snapshot_data_dir, "r")
+    )["start_block"]
     process_points()
+
+
+if __name__ == "__main__":
+    initialize_global_variables_and_process_points()

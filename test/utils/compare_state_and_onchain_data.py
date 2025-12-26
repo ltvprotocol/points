@@ -2,7 +2,7 @@ import json
 import os
 from web3 import Web3
 import pytest
-from utils.get_rpc import get_rpc
+from src.utils.get_rpc import get_rpc
 
 def load_contract_addresses():
     """Load contract addresses from config.json"""

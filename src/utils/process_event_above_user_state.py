@@ -1,5 +1,5 @@
 from typing import Dict
-from utils.event_type import EventType
+from .event_type import EventType
 
 ZERO_ADDRESS = "0x" + "0" * 40
 

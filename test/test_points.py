@@ -1,14 +1,14 @@
-from test_states import load_states_sorted
+from test.test_states import load_states_sorted
 from pathlib import Path
 import json
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from collections import defaultdict
 import sys
 
 # Add parent directory to path to import daily_points_v2
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from daily_points_v2 import give_points_for_user_state, POINTS_PER_PILOT_VAULT_TOKEN, POINTS_PER_PILOT_VAULT_TOKEN_FOR_NFT
-from utils.process_event_above_user_state import UserState
+from src.daily_points_v2 import give_points_for_user_state, POINTS_PER_PILOT_VAULT_TOKEN, POINTS_PER_PILOT_VAULT_TOKEN_FOR_NFT
+from src.utils.process_event_above_user_state import UserState
 
 DATA_DIR = Path("data")
 
@@ -96,7 +96,7 @@ class TestPoints:
     #         expected_points == point["points"][user]
     #     ), f"Expected points for user {user} with nft balance change but without balance change does not match calculated points: {expected_points} != {point['points'][user]}"
 
-    @patch('daily_points_v2.lp_balances_snapshot', new={
+    @patch('src.daily_points_v2.lp_balances_snapshot', new={
         "0x1234567890123456789012345678901234567890": UserState(balance=100)
     })
     def test_give_points_user_without_nft(self):
@@ -114,7 +114,7 @@ class TestPoints:
         assert result["0x1234567890123456789012345678901234567890"] == expected_points
         assert result["0x1234567890123456789012345678901234567890"] == 400000
 
-    @patch('daily_points_v2.lp_balances_snapshot', new={
+    @patch('src.daily_points_v2.lp_balances_snapshot', new={
         "0xABCDEFABCDEFABCDEFABCDEFABCDEFABCDEFABCD": UserState(balance=200)
     })
     def test_give_points_user_with_nft(self):
@@ -132,7 +132,7 @@ class TestPoints:
         assert result["0xabcdefabcdefabcdefabcdefabcdefabcdefabcd"] == expected_points
         assert result["0xabcdefabcdefabcdefabcdefabcdefabcdefabcd"] == 1136000
 
-    @patch('daily_points_v2.lp_balances_snapshot', new={
+    @patch('src.daily_points_v2.lp_balances_snapshot', new={
         "0x1111111111111111111111111111111111111111": UserState(balance=1000)
     })
     def test_give_points_balance_excluding_snapshot(self):
@@ -147,7 +147,7 @@ class TestPoints:
         # balance_excluding_snapshot should be max(0, 500 - 1000) = 0
         assert result["0x1111111111111111111111111111111111111111"] == 0
 
-    @patch('daily_points_v2.lp_balances_snapshot', new={
+    @patch('src.daily_points_v2.lp_balances_snapshot', new={
         "0xABCDEFABCDEFABCDEFABCDEFABCDEFABCDEFABCD": UserState(balance=0)
     })
     def test_give_points_address_lowercasing(self):
@@ -164,7 +164,7 @@ class TestPoints:
         assert "0xABCDEFABCDEFABCDEFABCDEFABCDEFABCDEFABCD" not in result
         assert result["0xabcdefabcdefabcdefabcdefabcdefabcdefabcd"] == 100 * POINTS_PER_PILOT_VAULT_TOKEN
 
-    @patch('daily_points_v2.lp_balances_snapshot', new={
+    @patch('src.daily_points_v2.lp_balances_snapshot', new={
         "0x2222222222222222222222222222222222222222": UserState(balance=0)
     })
     def test_give_points_points_accumulation(self):
@@ -181,7 +181,7 @@ class TestPoints:
         assert result["0x2222222222222222222222222222222222222222"] == 5000 + expected_new_points
         assert result["0x2222222222222222222222222222222222222222"] == 105000
 
-    @patch('daily_points_v2.lp_balances_snapshot', new={
+    @patch('src.daily_points_v2.lp_balances_snapshot', new={
         "0x1111111111111111111111111111111111111111": UserState(balance=100),
         "0x2222222222222222222222222222222222222222": UserState(balance=200),
     })
@@ -201,7 +201,7 @@ class TestPoints:
         # User 2: with NFT, balance_excluding_snapshot = 1000 - 200 = 800
         assert result["0x2222222222222222222222222222222222222222"] == 800 * POINTS_PER_PILOT_VAULT_TOKEN_FOR_NFT
 
-    @patch('daily_points_v2.lp_balances_snapshot', new={
+    @patch('src.daily_points_v2.lp_balances_snapshot', new={
         "0x3333333333333333333333333333333333333333": UserState(balance=500)
     })
     def test_give_points_zero_balance_excluding_snapshot(self):
@@ -216,7 +216,7 @@ class TestPoints:
         # balance_excluding_snapshot = max(0, 500 - 500) = 0
         assert result["0x3333333333333333333333333333333333333333"] == 0
 
-    @patch('daily_points_v2.lp_balances_snapshot', new={
+    @patch('src.daily_points_v2.lp_balances_snapshot', new={
         "0x4444444444444444444444444444444444444444": UserState(balance=0)
     })
     def test_give_points_empty_nft_set(self):

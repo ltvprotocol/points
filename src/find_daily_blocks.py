@@ -2,7 +2,7 @@
 import json
 from datetime import datetime, timezone
 import os
-from utils.aggregated_w3_request import w3_instances, make_aggregated_call
+from .utils.aggregated_w3_request import w3_instances, make_aggregated_call
 
 
 def get_min_deployment_block():

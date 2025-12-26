@@ -1,7 +1,7 @@
 from collections import defaultdict
 from typing import Dict, List
 import json
-from utils.event_type import EventType
+from .event_type import EventType
 
 
 def read_nft_events_as_block_number_to_array(file_path) -> Dict[int, List[dict]]:

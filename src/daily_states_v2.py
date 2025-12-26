@@ -1,16 +1,16 @@
 from datetime import datetime
-from utils.process_event_above_user_state import (
+from .utils.process_event_above_user_state import (
     UserState,
     process_event_above_user_state,
 )
-from utils.read_combined_sorted_events import read_combined_sorted_events
+from .utils.read_combined_sorted_events import read_combined_sorted_events
 import json
 import glob
 from collections import defaultdict
 import os
 import copy
-from utils.get_days_amount import get_days_amount
-from utils.get_additional_data import (
+from .utils.get_days_amount import get_days_amount
+from .utils.get_additional_data import (
     get_start_block_for_day,
     get_end_block_for_day,
     get_day_date,
@@ -136,4 +136,5 @@ def process_daily_states():
         user_state_before_start_block = clear_cached_values_for_zero_balances(daily_state.user_state)
 
 
-process_daily_states()
+if __name__ == "__main__":
+    process_daily_states()

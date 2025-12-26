@@ -1,6 +1,6 @@
-from utils.load_events_sorted import load_events_sorted
-from utils.get_rpc import get_rpc
-from find_deployment_blocks import load_contract_addresses
+from test.utils.load_events_sorted import load_events_sorted
+from src.utils.get_rpc import get_rpc
+from src.find_deployment_blocks import load_contract_addresses
 from collections import defaultdict
 from web3 import Web3
 

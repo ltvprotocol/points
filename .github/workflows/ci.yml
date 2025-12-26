@@ -24,15 +24,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Prepare data and run pipeline scripts
+      - name: Run main script
         run: |
-          python3 find_deployment_blocks.py
-          python3 find_daily_blocks.py
-          python3 nft_events.py
-          python3 pilot_vault_events.py
-          python3 daily_states_v2.py
-          python3 daily_points_v2.py
-          python3 aggregate_daily_points.py
-
-      - name: Run all tests
-        run: python3 test/main_test.py
+          python3 main.py

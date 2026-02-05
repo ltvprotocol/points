@@ -22,8 +22,6 @@ ZERO_ADDRESS = "0x" + "0" * 40
 POINTS_PER_PILOT_VAULT_TOKEN = 1500
 POINTS_PER_PILOT_VAULT_TOKEN_FOR_NFT = (142 * 1500) // 100  # 1.42
 
-LP_PROGRAM_DURATION_DAYS = 90
-
 type Points = int
 
 
@@ -68,7 +66,7 @@ class DailyPointsProcessor:
         for program in self.lp_snapshot[address].lp_programs:
             days_since_lp_start = (date - program.lp_start_date).days
             if (
-                days_since_lp_start <= LP_PROGRAM_DURATION_DAYS
+                days_since_lp_start <= program.lp_program_duration_days
                 and days_since_lp_start >= 0
             ):
                 balance_to_exclude += program.balance

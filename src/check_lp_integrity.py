@@ -11,7 +11,6 @@ from .utils.get_additional_data import (
 )
 from .utils.get_days_amount import get_days_amount
 from .utils.get_points_data import get_points_data, LpSnapshot
-from .daily_points_v2 import LP_PROGRAM_DURATION_DAYS
 from datetime import datetime
 from .daily_points_v2 import (
     get_user_state_at_day,
@@ -42,7 +41,7 @@ class LpIntegrityChecker:
             for program in self.lp_snapshot[address].lp_programs:
                 days_since_lp_start = (date - program.lp_start_date).days
                 if (
-                    days_since_lp_start <= LP_PROGRAM_DURATION_DAYS
+                    days_since_lp_start <= program.lp_program_duration_days
                     and days_since_lp_start >= 0
                 ):
                     balance_to_exclude += program.balance

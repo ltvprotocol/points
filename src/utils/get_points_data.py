@@ -4,9 +4,15 @@ from typing import List, Dict
 
 
 class LpProgram:
-    def __init__(self, balance: int, lp_start_date: datetime.date):
+    def __init__(
+        self,
+        balance: int,
+        lp_start_date: datetime.date,
+        lp_program_duration_days: int,
+    ):
         self.balance = balance
         self.lp_start_date = lp_start_date
+        self.lp_program_duration_days = lp_program_duration_days
 
 
 class UserLpSnapshot:
@@ -26,7 +32,9 @@ def get_points_data():
         address.lower(): UserLpSnapshot(
             [
                 LpProgram(
-                    program["balance"], datetime.date.fromisoformat(program["lp_start_date"])
+                    program["balance"],
+                    datetime.date.fromisoformat(program["lp_start_date"]),
+                    program["lp_program_duration_days"],
                 )
                 for program in lp_programs
             ]

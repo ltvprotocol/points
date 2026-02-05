@@ -4,265 +4,313 @@
         "0xa95584c820b5bc990a0572df4faba7fb9f4e210b": [
             {
                 "balance": 5000000000000000,
-                "lp_start_date": "2025-11-14"
+                "lp_start_date": "2025-11-14",
+                "lp_program_duration_days": 90
             }
         ],
         "0x6f9bb7e454f5b3eb2310343f0e99269dc2bb8a1d": [
             {
                 "balance": 102819000000000000000,
-                "lp_start_date": "2025-12-02"
+                "lp_start_date": "2025-12-02",
+                "lp_program_duration_days": 90
             }
         ],
         "0x290ca510021d18699b268f133813f6262a650d94": [
             {
                 "balance": 2000000000000000000,
-                "lp_start_date": "2025-11-17"
+                "lp_start_date": "2025-11-17",
+                "lp_program_duration_days": 90
             }
         ],
         "0xd2c2e84501c63b7b9897df063288d67060119c99": [
             {
                 "balance": 40000000000000000000,
-                "lp_start_date": "2025-11-18"
+                "lp_start_date": "2025-11-18",
+                "lp_program_duration_days": 90
             },
             {
                 "balance": 40000000000000000000,
-                "lp_start_date": "2026-02-17"
+                "lp_start_date": "2026-02-17",
+                "lp_program_duration_days": 180
             }
         ],
         "0x12667125770eb9fb46c48db659d3275e8fcd2ed7": [
             {
                 "balance": 39000000000000000000,
-                "lp_start_date": "2025-12-02"
+                "lp_start_date": "2025-12-02",
+                "lp_program_duration_days": 90
             }
         ],
         "0x9ab5b54092a1596a32127163b7b0176445eb1b0a": [
             {
                 "balance": 36701000000000000000,
-                "lp_start_date": "2025-11-24"
+                "lp_start_date": "2025-11-24",
+                "lp_program_duration_days": 90
             },
             {
                 "balance": 36701000000000000000,
-                "lp_start_date": "2026-02-23"
+                "lp_start_date": "2026-02-23",
+                "lp_program_duration_days": 180
             }
         ],
         "0xdc6447010c602bbcbdbe2aaff27d24af55fe5b75": [
             {
                 "balance": 24910000000000000000,
-                "lp_start_date": "2025-11-29"
+                "lp_start_date": "2025-11-29",
+                "lp_program_duration_days": 90
             }
         ],
         "0x39d10a4ad72a9b5bf7f1994233fdc331b01c685b": [
             {
                 "balance": 1002000000000000000,
-                "lp_start_date": "2025-11-15"
+                "lp_start_date": "2025-11-15",
+                "lp_program_duration_days": 90
             }
         ],
         "0x91a98fd033434adf63223f88064c95a89e08061c": [
             {
                 "balance": 8003750565999172549,
-                "lp_start_date": "2025-11-13"
+                "lp_start_date": "2025-11-13",
+                "lp_program_duration_days": 90
             }
         ],
         "0x202065dfb813295d0b095a39e36e3b3296210505": [
             {
                 "balance": 534187211964517143,
-                "lp_start_date": "2025-12-02"
+                "lp_start_date": "2025-12-02",
+                "lp_program_duration_days": 90
             }
         ],
         "0x758e5c5c4dd4c6aa1384f0495656a4f7c2f49ec3": [
             {
                 "balance": 134000000000000000,
-                "lp_start_date": "2025-11-17"
+                "lp_start_date": "2025-11-17",
+                "lp_program_duration_days": 90
             }
         ],
         "0xede66ed0fca1a9ebb052cce681c89d7535408ccf": [
             {
                 "balance": 329887899954383005,
-                "lp_start_date": "2025-11-17"
+                "lp_start_date": "2025-11-17",
+                "lp_program_duration_days": 90
             }
         ],
         "0xa0b14f6fe7f647e84b4ac954036865330a9eac5c": [
             {
                 "balance": 80000000000000000,
-                "lp_start_date": "2025-11-17"
+                "lp_start_date": "2025-11-17",
+                "lp_program_duration_days": 90
             }
         ],
         "0x188a7c5b071c01ad31ad80ae7fc28b1b6f389fd6": [
             {
                 "balance": 32000000000000000000,
-                "lp_start_date": "2025-11-17"
+                "lp_start_date": "2025-11-17",
+                "lp_program_duration_days": 90
             },
             {
                 "balance": 32000000000000000000,
-                "lp_start_date": "2026-02-16"
+                "lp_start_date": "2026-02-16",
+                "lp_program_duration_days": 180
             }
         ],
         "0x73afef607da2dbd27bd9c83e9e9297ae9ca1fd2b": [
             {
                 "balance": 25000000000000000000,
-                "lp_start_date": "2025-11-18"
+                "lp_start_date": "2025-11-18",
+                "lp_program_duration_days": 90
             }
         ],
         "0x54b3ff56f75671d91d85d44bccedbc9179e09afc": [
             {
                 "balance": 25000000000000000000,
-                "lp_start_date": "2025-11-18"
+                "lp_start_date": "2025-11-18",
+                "lp_program_duration_days": 90
             }
         ],
         "0x5b191f5a2b4a867c4ed71858daccc51fc59c69c0": [
             {
                 "balance": 30000000000000000000,
-                "lp_start_date": "2025-11-18"
+                "lp_start_date": "2025-11-18",
+                "lp_program_duration_days": 90
             },
             {
                 "balance": 30000000000000000000,
-                "lp_start_date": "2026-02-17"
+                "lp_start_date": "2026-02-17",
+                "lp_program_duration_days": 180
             }
         ],
         "0xfb40932271fc9db9dbf048e80697e2da4aa57250": [
             {
                 "balance": 25000000000000000000,
-                "lp_start_date": "2025-11-18"
+                "lp_start_date": "2025-11-18",
+                "lp_program_duration_days": 90
             }
         ],
         "0xd5f4cbfadb349be5dba580f9360eb6867a1d590e": [
             {
                 "balance": 29700000000000000000,
-                "lp_start_date": "2025-11-28"
+                "lp_start_date": "2025-11-28",
+                "lp_program_duration_days": 90
             }
         ],
         "0x0450a946a93cf6f81fd72f1e85e16a8826bc9c4d": [
             {
                 "balance": 25000000000000000000,
-                "lp_start_date": "2025-11-19"
+                "lp_start_date": "2025-11-19",
+                "lp_program_duration_days": 90
             }
         ],
         "0xedf3af29040e069a4cbd6e13fbead2500733f2b1": [
             {
                 "balance": 35000000000000000000,
-                "lp_start_date": "2025-11-19"
+                "lp_start_date": "2025-11-19",
+                "lp_program_duration_days": 90
             },
             {
                 "balance": 45000000000000000000,
-                "lp_start_date": "2026-02-18"
+                "lp_start_date": "2026-02-18",
+                "lp_program_duration_days": 180
             }
         ],
         "0x8a252b597856b06b3e7efe5d798d73b3c5fbf5ca": [
             {
                 "balance": 25000000000000000000,
-                "lp_start_date": "2025-11-19"
+                "lp_start_date": "2025-11-19",
+                "lp_program_duration_days": 90
             },
             {
                 "balance": 25000000000000000000,
-                "lp_start_date": "2026-02-18"
+                "lp_start_date": "2026-02-18",
+                "lp_program_duration_days": 180
             }
         ],
         "0xa52af0e35970783f587b77f7b8db94871435009c": [
             {
                 "balance": 49918800000000000000,
-                "lp_start_date": "2025-11-22"
+                "lp_start_date": "2025-11-22",
+                "lp_program_duration_days": 90
             },
             {
                 "balance": 49918800000000000000,
-                "lp_start_date": "2026-02-21"
+                "lp_start_date": "2026-02-21",
+                "lp_program_duration_days": 180
             }
         ],
         "0xb378273190f974e017d13db074976d55f57e0d20": [
             {
                 "balance": 50000000000000000000,
-                "lp_start_date": "2025-11-20"
+                "lp_start_date": "2025-11-20",
+                "lp_program_duration_days": 90
             },
             {
                 "balance": 50000000000000000000,
-                "lp_start_date": "2026-02-19"
+                "lp_start_date": "2026-02-19",
+                "lp_program_duration_days": 180
             }
         ],
         "0xdf516f0df67b53f9fc0d4c443a9b07da4ac3174d": [
             {
                 "balance": 25000000000000000000,
-                "lp_start_date": "2025-11-20"
+                "lp_start_date": "2025-11-20",
+                "lp_program_duration_days": 90
             },
             {
                 "balance": 25000000000000000000,
-                "lp_start_date": "2026-02-19"
+                "lp_start_date": "2026-02-19",
+                "lp_program_duration_days": 180
             }
         ],
         "0xc3cb47f1d74abc82cc9acd748c9c6714f9c77eff": [
             {
                 "balance": 25000000000000000000,
-                "lp_start_date": "2025-11-21"
+                "lp_start_date": "2025-11-21",
+                "lp_program_duration_days": 90
             }
         ],
         "0x9bcd43b2f6f43cb26032edf584f9e511091f83b0": [
             {
                 "balance": 25000000000000000000,
-                "lp_start_date": "2025-11-24"
+                "lp_start_date": "2025-11-24",
+                "lp_program_duration_days": 90
             }
         ],
         "0x588058a144e22d96e235a5aab6e81c9a5749538e": [
             {
                 "balance": 34900000000000000000,
-                "lp_start_date": "2025-11-25"
+                "lp_start_date": "2025-11-25",
+                "lp_program_duration_days": 90
             },
             {
                 "balance": 34900000000000000000,
-                "lp_start_date": "2026-02-24"
+                "lp_start_date": "2026-02-24",
+                "lp_program_duration_days": 180
             }
         ],
         "0xe4e8d412e3dce3357bb420ec24e51f6bcc1a1bc0": [
             {
                 "balance": 50000000000000000000,
-                "lp_start_date": "2025-11-27"
+                "lp_start_date": "2025-11-27",
+                "lp_program_duration_days": 90
             }
         ],
         "0x6c153feae296dd6f0249323cf597724a9ebfff33": [
             {
                 "balance": 91300000000000000000,
-                "lp_start_date": "2025-11-28"
+                "lp_start_date": "2025-11-28",
+                "lp_program_duration_days": 90
             }
         ],
         "0x5fe0cdf0b1c84cd4a92cec746c84816a3a8b21ef": [
             {
                 "balance": 25000000000000000000,
-                "lp_start_date": "2025-11-28"
+                "lp_start_date": "2025-11-28",
+                "lp_program_duration_days": 90
             }
         ],
         "0xdb4efc647a72ed5fb03c20143b85657dafb6a039": [
             {
                 "balance": 99700000000000000000,
-                "lp_start_date": "2025-11-29"
+                "lp_start_date": "2025-11-29",
+                "lp_program_duration_days": 90
             },
             {
                 "balance": 99700000000000000000,
-                "lp_start_date": "2026-02-28"
+                "lp_start_date": "2026-02-28",
+                "lp_program_duration_days": 180
             }
         ],
         "0x9b029d74e8770b8a7a88670f5ec69c3c6d33f0e2": [
             {
                 "balance": 24500000000000000000,
-                "lp_start_date": "2025-11-30"
+                "lp_start_date": "2025-11-30",
+                "lp_program_duration_days": 90
             }
         ],
         "0x96fe4e4cd275f1f39eea9d6184447c12006b8536": [
             {
                 "balance": 29870000000000000000,
-                "lp_start_date": "2025-12-02"
+                "lp_start_date": "2025-12-02",
+                "lp_program_duration_days": 90
             },
             {
                 "balance": 29870000000000000000,
-                "lp_start_date": "2026-03-03"
+                "lp_start_date": "2026-03-03",
+                "lp_program_duration_days": 180
             }
         ],
         "0x05dac02c4c226da6824e0fd2a944c97ab6a34c5d": [
             {
                 "balance": 25050000000000000000,
-                "lp_start_date": "2025-12-02"
+                "lp_start_date": "2025-12-02",
+                "lp_program_duration_days": 90
             }
         ],
         "0x10B58e5B7eC83E3c0B9e8b3e21Ec335931965B50": [
             {
                 "balance": 3457909000875908150,
-                "lp_start_date": "2026-01-26"
+                "lp_start_date": "2026-01-26",
+                "lp_program_duration_days": 180
             }
         ]
     }

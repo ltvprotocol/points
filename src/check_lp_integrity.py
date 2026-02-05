@@ -10,54 +10,43 @@ from .utils.get_additional_data import (
     get_day_date,
 )
 from .utils.get_days_amount import get_days_amount
-from .daily_points_v2 import LP_PROGRAM_DURATION_DAYS
+from .utils.get_points_data import get_points_data, LpSnapshot
 from datetime import datetime
 from .daily_points_v2 import (
     get_user_state_at_day,
 )
 from .utils.process_event_above_user_state import UserState
-from .daily_points_v2 import load_lp_balances_snapshot_data
 import sys
 
 
 class LpIntegrityChecker:
     def __init__(
         self,
-        lp_balances_snapshot: Dict[str, UserState],
-        lp_balances_snapshot_start_block: int,
+        lp_snapshot: LpSnapshot,
+        points_program_start_block: int,
     ):
-        self.lp_balances_snapshot = lp_balances_snapshot
-        self.lp_balances_snapshot_start_block = lp_balances_snapshot_start_block
+        self.lp_snapshot = lp_snapshot
+        self.points_program_start_block = points_program_start_block
 
     def _validate_lp_integrity(self, users_state, date_unparsed) -> dict[str, bool]:
-        date = datetime.fromisoformat(date_unparsed)
+        date = datetime.fromisoformat(date_unparsed).date()
         result = defaultdict(bool)
         for address, user_state in users_state.items():
             user_balance = user_state.balance
-            if user_state.last_positive_balance_update_day == "":
-                if user_balance > 0:
-                    raise ValueError(
-                        f"User {address} has balance {user_balance} but no last positive balance update day"
-                    )
-                result[address] = False
-                continue
-            try:
-                lp_entering_day = datetime.fromisoformat(
-                    user_state.last_positive_balance_update_day
-                )
-            except:
-                print(
-                    f"Error converting {user_state.last_positive_balance_update_day} to datetime"
-                )
-                print(type(user_state.last_positive_balance_update_day))
-                raise 1
-            if (date - lp_entering_day).days > LP_PROGRAM_DURATION_DAYS:
+            if address not in self.lp_snapshot:
                 result[address] = False
                 continue
 
-            is_integrity_broken = (
-                user_balance < self.lp_balances_snapshot[address].balance
-            )
+            balance_to_exclude = 0
+            for program in self.lp_snapshot[address].lp_programs:
+                days_since_lp_start = (date - program.lp_start_date).days
+                if (
+                    days_since_lp_start <= program.lp_program_duration_days
+                    and days_since_lp_start >= 0
+                ):
+                    balance_to_exclude += program.balance
+
+            is_integrity_broken = user_balance < balance_to_exclude
             result[address] = is_integrity_broken
         return result
 
@@ -70,8 +59,8 @@ class LpIntegrityChecker:
         user_state = get_user_state_at_day(day_index, "start_state")
         date_unparsed = get_day_date(day_index)
 
-        # We only need to check blocks after the snapshot start block
-        start_block = max(start_block, self.lp_balances_snapshot_start_block)
+        # We only need to check blocks after the points program start block
+        start_block = max(start_block, self.points_program_start_block)
         for block_number in range(start_block, end_block + 1):
             events = block_number_to_events[block_number]
             for event in events:
@@ -119,9 +108,7 @@ class LpIntegrityChecker:
 
 
 if __name__ == "__main__":
-    lp_balances_snapshot, lp_balances_snapshot_start_block = (
-        load_lp_balances_snapshot_data()
-    )
-    checker = LpIntegrityChecker(lp_balances_snapshot, lp_balances_snapshot_start_block)
+    points_program_start_block, lp_snapshot = get_points_data()
+    checker = LpIntegrityChecker(lp_snapshot, points_program_start_block)
     exit_code = checker.check_lp_integrity()
     sys.exit(exit_code)

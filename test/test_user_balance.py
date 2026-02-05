@@ -2,7 +2,7 @@ from web3 import Web3
 from test.utils.compare_state_and_onchain_data import compare_state_and_onchain_data
 
 
-use_state_file = ["../lp_balances_snapshot.json", "84.json"]
+use_state_file = ["132.json", "84.json"]
 use_state_file_index = 0
 
 ERC20_ABI = [

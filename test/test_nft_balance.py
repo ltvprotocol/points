@@ -3,7 +3,7 @@ from test.utils.compare_state_and_onchain_data import compare_state_and_onchain_
 from collections import defaultdict
 
 
-use_state_file = ["../lp_balances_snapshot.json", "84.json"]
+use_state_file = ["132.json", "84.json"]
 
 # ERC721 ABI for balanceOf and ownerOf functions
 ERC721_ABI = [

@@ -3,3 +3,4 @@ data/*
 __pycache__/
 .env
 !data/lp_balances_snapshot.json
+!data/lp_snapshot.json

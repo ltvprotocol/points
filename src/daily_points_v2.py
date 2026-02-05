@@ -14,6 +14,7 @@ from .utils.get_additional_data import (
     get_end_block_for_day,
     get_day_date,
 )
+from .utils.get_points_data import get_points_data, LpSnapshot
 from datetime import datetime
 
 ZERO_ADDRESS = "0x" + "0" * 40
@@ -52,36 +53,27 @@ def get_user_state_at_day(day_index, state_key):
 class DailyPointsProcessor:
     def __init__(
         self,
-        lp_balances_snapshot: Dict[str, UserState],
-        lp_balances_snapshot_start_block: int,
+        lp_snapshot: LpSnapshot,
+        points_program_start_block: int,
     ):
-        self.lp_balances_snapshot = lp_balances_snapshot
-        self.lp_balances_snapshot_start_block = lp_balances_snapshot_start_block
+        self.lp_snapshot = lp_snapshot
+        self.points_program_start_block = points_program_start_block
 
     def get_balance_excluding_snapshot(self, address, user_state, date_unparsed) -> int:
-        if address not in self.lp_balances_snapshot.keys():
+        if address not in self.lp_snapshot.keys():
             return user_state.balance
 
-        snapshot_entering_day_unparsed = self.lp_balances_snapshot[
-            address
-        ].last_positive_balance_update_day
-
-        if snapshot_entering_day_unparsed == "":
-            if self.lp_balances_snapshot[address].balance > 0:
-                raise ValueError(
-                    f"User {address} has balance {self.lp_balances_snapshot[address].balance} but no last positive balance update day"
-                )
-            return user_state.balance
-
-        snapshot_entering_day = datetime.fromisoformat(
-            snapshot_entering_day_unparsed
-        ).date()
-
+        balance_to_exclude = 0
         date = datetime.fromisoformat(date_unparsed).date()
+        for program in self.lp_snapshot[address].lp_programs:
+            days_since_lp_start = (date - program.lp_start_date).days
+            if (
+                days_since_lp_start <= LP_PROGRAM_DURATION_DAYS
+                and days_since_lp_start >= 0
+            ):
+                balance_to_exclude += program.balance
 
-        if (date - snapshot_entering_day).days > LP_PROGRAM_DURATION_DAYS:
-            return user_state.balance
-        return max(0, user_state.balance - self.lp_balances_snapshot[address].balance)
+        return max(0, user_state.balance - balance_to_exclude)
 
     def give_points_for_user_state(self, user_state, points, date) -> Dict[str, Points]:
         for address, user_state in user_state.items():
@@ -111,7 +103,7 @@ class DailyPointsProcessor:
             events = block_number_to_events[block_number]
             for event in events:
                 user_state = process_event_above_user_state(event, user_state, date)
-            if block_number > self.lp_balances_snapshot_start_block:
+            if block_number > self.points_program_start_block:
                 points = self.give_points_for_user_state(user_state, points, date)
 
         validate_end_state(day_index, user_state)
@@ -150,6 +142,7 @@ class DailyPointsProcessor:
             results.append(result)
 
         return results
+
 
 def validate_end_state(day_index, result_user_balances):
     cached_user_balances = get_user_state_at_day(day_index, "end_state")
@@ -193,19 +186,11 @@ def validate_end_state(day_index, result_user_balances):
     print(f"Verified end state for day {day_index}")
 
 
-def load_lp_balances_snapshot_data():
-    """Load LP balances snapshot data from file and return as tuple (snapshot, start_block)."""
-    lp_balances_snapshot_data_dir = "data/lp_balances_snapshot.json"
-    lp_balances_snapshot = get_user_state(lp_balances_snapshot_data_dir, "start_state")
-    lp_balances_snapshot_start_block = json.load(
-        open(lp_balances_snapshot_data_dir, "r")
-    )["start_block"]
-    return lp_balances_snapshot, lp_balances_snapshot_start_block
-
 def process_points():
-    lp_balances_snapshot, lp_balances_snapshot_start_block = load_lp_balances_snapshot_data()
-    processor = DailyPointsProcessor(lp_balances_snapshot, lp_balances_snapshot_start_block)
-    processor.process_points()    
+    points_program_start_block, lp_snapshot = get_points_data()
+    processor = DailyPointsProcessor(lp_snapshot, points_program_start_block)
+    processor.process_points()
+
 
 if __name__ == "__main__":
     process_points()
